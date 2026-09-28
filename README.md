@@ -36,7 +36,19 @@ npm run dev
 | `npm run preview` | Sirve `dist/` para probar la instalación y el modo sin conexión |
 | `npm test` | Verifica que los totales de la demo cierren |
 
-Para publicar en un subdirectorio (GitHub Pages): `BASE=/saas-crm/ npm run build`.
+## Publicación
+
+Cada push a `main` dispara el workflow de GitHub Actions (`.github/workflows/pages.yml`), que corre los tests, construye y publica en GitHub Pages:
+
+**https://ioconsultingarg.github.io/saas-crm/**
+
+El subdirectorio se deriva solo del nombre del repositorio, así que no hay nada que configurar. Para reproducir ese build localmente:
+
+```bash
+BASE_PATH=saas-crm npm run build
+```
+
+`BASE_PATH` va **sin barras** a propósito: con `/saas-crm/`, Git Bash en Windows lo convierte en una ruta de disco y el build sale roto.
 
 ## Decisiones que conviene no revertir
 

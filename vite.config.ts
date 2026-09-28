@@ -2,8 +2,13 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// BASE permite publicar en un subdirectorio (GitHub Pages) sin tocar el codigo.
-const base = process.env.BASE ?? '/'
+// En GitHub Actions el subdirectorio sale solo del nombre del repo
+// (ioconsultingarg/saas-crm -> /saas-crm/). Localmente queda en la raiz.
+// BASE_PATH permite forzarlo a mano; va SIN barras para que Git Bash en
+// Windows no lo convierta en una ruta de disco.
+const repo = process.env.GITHUB_REPOSITORY?.split('/')[1]
+const manual = process.env.BASE_PATH?.replace(/^\/+|\/+$/g, '')
+const base = manual ? `/${manual}/` : repo ? `/${repo}/` : '/'
 
 export default defineConfig({
   base,
