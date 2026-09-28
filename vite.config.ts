@@ -2,12 +2,23 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// En desarrollo el sitio vive en la raiz. Para publicar en GitHub Pages,
-// `npm run publicar` pasa --base /saas-crm/ y --outDir docs por linea de
-// comandos, que es lo que lee Pages desde la rama main.
-
+/**
+ * El codigo fuente vive en app/ y el sitio compilado se escribe en la RAIZ
+ * del repositorio. Asi GitHub Pages publica desde main / (root), igual que
+ * los demas demos del portfolio, sin carpeta docs ni workflows.
+ *
+ * base './' hace que las rutas sean relativas: el sitio funciona tanto en
+ * https://usuario.github.io/saas-crm/ como abierto localmente, sin tener
+ * que pasarle el subdirectorio al build.
+ */
 export default defineConfig({
+  root: 'app',
+  base: './',
   build: {
+    outDir: '..',
+    // La salida convive con package.json, app/ y node_modules: vaciar el
+    // directorio borraria el repositorio entero.
+    emptyOutDir: false,
     rollupOptions: {
       output: {
         // El grafico es lo mas pesado y solo hace falta en la ficha del cliente.
@@ -22,6 +33,7 @@ export default defineConfig({
       includeAssets: ['apple-touch-icon.png', 'ejemplo-ventas.csv'],
       workbox: {
         globPatterns: ['**/*.{js,css,html,woff2,png,svg,csv}'],
+        globIgnores: ['app/**', 'node_modules/**', 'scripts/**'],
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
       },
       manifest: {

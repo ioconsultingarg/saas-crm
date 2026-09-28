@@ -6,10 +6,10 @@
   "description": "IO-CRM — demo del modulo Cartera: CRM de recompra para PyMEs y distribuidoras",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && node scripts/limpiar-salida.mjs && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "publicar": "tsc -b && vite build --outDir docs --base /saas-crm/"
+    "publicar": "npm run build"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.1.0",

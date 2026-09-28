@@ -6,7 +6,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const raiz = join(dirname(fileURLToPath(import.meta.url)), '..')
-const publico = join(raiz, 'public')
+const publico = join(raiz, 'app', 'public')
 mkdirSync(publico, { recursive: true })
 
 /* ------------------------------------------------------------------ PNG */

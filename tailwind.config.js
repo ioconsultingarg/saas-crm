@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{ts,tsx}'],
+  content: ['./app/index.html', './app/src/**/*.{ts,tsx}'],
   theme: {
     // Los tokens viven en estilos.css como variables CSS; Tailwind solo los expone.
     colors: {
