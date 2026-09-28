@@ -24,12 +24,17 @@ const mesCorto = new Intl.DateTimeFormat('es-AR', { month: 'short' })
 
 export const pesosARS = (n: number) => pesos0.format(n)
 export const num = (n: number) => numero0.format(n)
-export const pct = (n: number) => porcentaje.format(n)
-
 const porcentajeSinSigno = new Intl.NumberFormat('es-AR', {
   style: 'percent',
   maximumFractionDigits: 0,
 })
+
+/** Tasas y proporciones: 64%, sin signo. Es el caso normal. */
+export const pct = (n: number) => porcentajeSinSigno.format(n)
+
+/** Solo para variaciones, donde el signo significa algo: +18%, -31%. */
+export const pctVar = (n: number) => porcentaje.format(n)
+
 /** Para frases que ya dicen la direccion: "las unidades bajan 31%". */
 export const pctPlano = (n: number) => porcentajeSinSigno.format(Math.abs(n))
 

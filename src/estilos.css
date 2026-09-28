@@ -30,6 +30,20 @@
   --sano-fondo: #eaf2ec;
   --ocre: #b07a12;
 
+  /* Etapas del embudo. Contrastes verificados en claro y oscuro. */
+  --e-prospecto: #5b5563;
+  --e-contactado: #12408f;
+  --e-propuesta: #7a5200;
+  --e-negociacion: #8a4b12;
+  --e-ganado: #2c6340;
+  --e-perdido: #96301f;
+
+  /* Campo de navegacion: azul dominante contra el papel del contenido. */
+  --campo: #0d2f6b;
+  --campo-texto: #dce6f7;
+  --campo-activo: #1b4da8;
+  --campo-borde: #1d3f7d;
+
   --mov-instantaneo: 100ms;
   --mov-corto: 150ms;
   --mov-medio: 250ms;
@@ -55,6 +69,16 @@
     --sano: #7fc79a;
     --sano-fondo: #12251a;
     --ocre: #e8b04b;
+    --e-prospecto: #b0aab8;
+    --e-contactado: #7fa9ff;
+    --e-propuesta: #e8b04b;
+    --e-negociacion: #f0a868;
+    --e-ganado: #7fc79a;
+    --e-perdido: #ff9585;
+    --campo: #0b0e13;
+    --campo-texto: #c6cedb;
+    --campo-activo: #1e2732;
+    --campo-borde: #232b36;
     color-scheme: dark;
   }
 }
@@ -75,6 +99,16 @@
   --sano: #7fc79a;
   --sano-fondo: #12251a;
   --ocre: #e8b04b;
+  --e-prospecto: #b0aab8;
+  --e-contactado: #7fa9ff;
+  --e-propuesta: #e8b04b;
+  --e-negociacion: #f0a868;
+  --e-ganado: #7fc79a;
+  --e-perdido: #ff9585;
+  --campo: #0b0e13;
+  --campo-texto: #c6cedb;
+  --campo-activo: #1e2732;
+  --campo-borde: #232b36;
   color-scheme: dark;
 }
 

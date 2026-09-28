@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Marco } from './componentes/Marco'
 import { Aviso } from './componentes/Aviso'
+import { Login } from './vistas/Login'
+import { Dashboard } from './vistas/Dashboard'
+import { Pipeline } from './vistas/Pipeline'
+import { Empresas } from './vistas/Empresas'
+import { Reportes } from './vistas/Reportes'
+import { Configuracion } from './vistas/Configuracion'
 import { ListaDelLunes } from './vistas/ListaDelLunes'
 import { FichaCliente } from './vistas/FichaCliente'
 import { Cartera } from './vistas/Cartera'
@@ -9,6 +15,8 @@ import { Importar } from './vistas/Importar'
 import { useRutaHash } from './hooks/useRutaHash'
 import { useTema } from './hooks/useTema'
 import { useGestiones } from './hooks/useGestiones'
+import { useAuth } from './hooks/useAuth'
+import { usePipeline } from './hooks/usePipeline'
 import { analizarTodos, conAlerta } from './lib/calculos'
 import { CLIENTES, TOTAL_EN_RIESGO } from './data'
 import type { ResultadoGestion } from './tipos'
@@ -18,12 +26,13 @@ interface EventoInstalacion extends Event {
 }
 
 export default function App() {
-  const { ruta, navegar, abrirCliente, cerrarCliente } = useRutaHash()
+  const { ruta, navegar, abrirCliente, abrirEmpresa, volver } = useRutaHash()
   const { esOscuro, alternar } = useTema()
+  const { usuario, entrar, salir } = useAuth()
   const { gestiones, registrar, deshacer, reiniciar } = useGestiones()
-  const [aviso, setAviso] = useState<{ texto: string; clienteId?: string } | null>(null)
+  const { oportunidades, mover, deshacer: deshacerMov, ultimo } = usePipeline()
+  const [aviso, setAviso] = useState<{ texto: string; deshacer?: () => void } | null>(null)
   const [instalador, setInstalador] = useState<EventoInstalacion | null>(null)
-  const [ayudaIOS, setAyudaIOS] = useState(false)
 
   const clientes = useMemo(() => analizarTodos(CLIENTES), [])
   const enRiesgo = useMemo(() => conAlerta(clientes), [clientes])
@@ -34,18 +43,6 @@ export default function App() {
       setInstalador(e as EventoInstalacion)
     }
     window.addEventListener('beforeinstallprompt', alPoder)
-
-    // iOS no dispara el evento: se explica una sola vez y no se insiste.
-    const esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent)
-    const instalada = window.matchMedia('(display-mode: standalone)').matches
-    let yaVisto = false
-    try {
-      yaVisto = localStorage.getItem('io-crm:ayuda-ios') === '1'
-    } catch {
-      yaVisto = true
-    }
-    if (esIOS && !instalada && !yaVisto) setAyudaIOS(true)
-
     return () => window.removeEventListener('beforeinstallprompt', alPoder)
   }, [])
 
@@ -54,82 +51,99 @@ export default function App() {
     setInstalador(null)
   }, [instalador])
 
-  const cerrarAyudaIOS = () => {
-    setAyudaIOS(false)
-    try {
-      localStorage.setItem('io-crm:ayuda-ios', '1')
-    } catch {
-      /* si no se puede guardar, simplemente se vuelve a mostrar */
-    }
-  }
+  if (!usuario) return <Login entrar={entrar} />
 
   const alRegistrar = (id: string, r: ResultadoGestion, nota?: string) => {
     registrar(id, r, nota)
     const c = clientes.find((x) => x.id === id)
-    setAviso({ texto: `${c?.razonSocial ?? 'Cliente'}: ${r}`, clienteId: id })
+    setAviso({ texto: `${c?.razonSocial ?? 'Cliente'}: ${r}`, deshacer: () => deshacer(id) })
+  }
+
+  const alMover = (id: string, etapa: Parameters<typeof mover>[1]) => {
+    mover(id, etapa)
+    setAviso({ texto: 'Oportunidad movida', deshacer: deshacerMov })
   }
 
   const clienteAbierto = ruta.cliente ? clientes.find((c) => c.id === ruta.cliente) : undefined
 
+  const contenido = () => {
+    if (clienteAbierto) return <FichaCliente c={clienteAbierto} volver={volver} />
+    if (ruta.empresa || ruta.vista === 'empresas')
+      return (
+        <Empresas
+          oportunidades={oportunidades}
+          empresaAbierta={ruta.empresa}
+          abrirEmpresa={abrirEmpresa}
+          cerrarEmpresa={volver}
+        />
+      )
+
+    switch (ruta.vista) {
+      case 'pipeline':
+        return <Pipeline oportunidades={oportunidades} mover={alMover} abrirEmpresa={abrirEmpresa} />
+      case 'reportes':
+        return <Reportes oportunidades={oportunidades} />
+      case 'configuracion':
+        return <Configuracion />
+      case 'lista':
+        return (
+          <ListaDelLunes
+            enRiesgo={enRiesgo}
+            totalEnRiesgo={TOTAL_EN_RIESGO}
+            gestiones={gestiones}
+            registrar={alRegistrar}
+            abrirCliente={abrirCliente}
+            filtroVendedor={ruta.vendedor}
+            filtroZona={ruta.zona}
+            alFiltrar={(c) => navegar(c)}
+          />
+        )
+      case 'cartera':
+        return (
+          <Cartera
+            clientes={clientes}
+            abrirCliente={abrirCliente}
+            filtroSegmento={ruta.segmento}
+            alFiltrar={(c) => navegar(c)}
+          />
+        )
+      case 'parte':
+        return <ParteDeCartera />
+      case 'importar':
+        return <Importar />
+      default:
+        return (
+          <Dashboard
+            oportunidades={oportunidades}
+            clientes={clientes}
+            irAPipeline={() => navegar({ vista: 'pipeline' })}
+            irACartera={() => navegar({ vista: 'lista' })}
+            abrirEmpresa={abrirEmpresa}
+          />
+        )
+    }
+  }
+
   return (
     <Marco
       vista={ruta.vista}
-      irA={(v) => navegar({ vista: v, cliente: undefined })}
+      irA={(v) => navegar({ vista: v, cliente: undefined, empresa: undefined })}
+      usuario={usuario}
+      salir={salir}
       esOscuro={esOscuro}
       alternarTema={alternar}
       puedeInstalar={Boolean(instalador)}
       instalar={instalar}
     >
-      {ayudaIOS && (
-        <div className="panel p-3 mb-4 flex items-start gap-3 no-imprimir">
-          <p className="text-cuerpo flex-1">
-            Para instalar IO-CRM en el iPhone: tocá <strong>Compartir</strong> y después{' '}
-            <strong>Agregar a inicio</strong>.
-          </p>
-          <button type="button" className="boton boton-sutil" onClick={cerrarAyudaIOS}>
-            Entendido
-          </button>
-        </div>
-      )}
+      {contenido()}
 
-      {clienteAbierto ? (
-        <FichaCliente c={clienteAbierto} volver={cerrarCliente} />
-      ) : ruta.vista === 'lista' ? (
-        <ListaDelLunes
-          enRiesgo={enRiesgo}
-          totalEnRiesgo={TOTAL_EN_RIESGO}
-          gestiones={gestiones}
-          registrar={alRegistrar}
-          abrirCliente={abrirCliente}
-          filtroVendedor={ruta.vendedor}
-          filtroZona={ruta.zona}
-          alFiltrar={(cambio) => navegar(cambio)}
-        />
-      ) : ruta.vista === 'cartera' ? (
-        <Cartera
-          clientes={clientes}
-          abrirCliente={abrirCliente}
-          filtroSegmento={ruta.segmento}
-          alFiltrar={(cambio) => navegar(cambio)}
-        />
-      ) : ruta.vista === 'parte' ? (
-        <ParteDeCartera />
-      ) : (
-        <Importar />
-      )}
-
-      <footer className="mt-6 pt-4 border-t border-pauta text-micro text-tinta-suave flex flex-wrap items-center gap-3 no-imprimir">
-        <span>
-          IO-CRM · demo con datos ficticios de Distribuidora Demo S.R.L.
-        </span>
-        {gestiones.length > 0 && (
+      <footer className="mt-6 pt-4 text-micro text-tinta-suave flex flex-wrap items-center gap-3 no-imprimir" style={{ borderTop: '1px solid var(--pauta)' }}>
+        <span>IO-CRM · demo con datos ficticios de Distribuidora Demo S.R.L.</span>
+        {(gestiones.length > 0 || ultimo) && (
           <button
             type="button"
             className="boton boton-sutil"
-            onClick={() => {
-              reiniciar()
-              setAviso({ texto: 'Demo reiniciada' })
-            }}
+            onClick={() => { reiniciar(); setAviso({ texto: 'Demo reiniciada' }) }}
           >
             Reiniciar demo
           </button>
@@ -140,14 +154,7 @@ export default function App() {
         <Aviso
           texto={aviso.texto}
           alCerrar={() => setAviso(null)}
-          alDeshacer={
-            aviso.clienteId
-              ? () => {
-                  deshacer(aviso.clienteId!)
-                  setAviso(null)
-                }
-              : undefined
-          }
+          alDeshacer={aviso.deshacer ? () => { aviso.deshacer!(); setAviso(null) } : undefined}
         />
       )}
     </Marco>
