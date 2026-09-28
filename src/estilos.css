@@ -1,0 +1,267 @@
+@import '@fontsource-variable/newsreader';
+@import '@fontsource-variable/archivo';
+@import '@fontsource/archivo-narrow/500.css';
+@import '@fontsource/archivo-narrow/600.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------
+   Direccion A — "el remito bien hecho".
+   Contrastes verificados; ver DISENO-IO-CRM.md seccion 3.
+   --------------------------------------------------------------- */
+:root {
+  --papel: #faf8f5;
+  --superficie: #ffffff;
+  --tinta: #14181f;
+  --tinta-suave: #57606f;
+  --pauta: #e7e3dc;
+  --borde-control: #8a8578;
+  --marca: #12408f;
+  --marca-texto: #ffffff;
+  --critico: #96301f;
+  --critico-fondo: #fbeeeb;
+  --riesgo: #7a5200;
+  --riesgo-fondo: #fbf2df;
+  --sano: #2c6340;
+  --sano-fondo: #eaf2ec;
+  --ocre: #b07a12;
+
+  --mov-instantaneo: 100ms;
+  --mov-corto: 150ms;
+  --mov-medio: 250ms;
+  --curva: cubic-bezier(0.2, 0, 0, 1);
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema='claro']) {
+    --papel: #101317;
+    --superficie: #181c22;
+    --tinta: #edeff2;
+    --tinta-suave: #a0a8b4;
+    --pauta: #262c35;
+    --borde-control: #626b7b;
+    --marca: #7fa9ff;
+    --marca-texto: #0b1220;
+    --critico: #ff9585;
+    --critico-fondo: #2a1714;
+    --riesgo: #e8b04b;
+    --riesgo-fondo: #241b0c;
+    --sano: #7fc79a;
+    --sano-fondo: #12251a;
+    --ocre: #e8b04b;
+    color-scheme: dark;
+  }
+}
+
+:root[data-tema='oscuro'] {
+  --papel: #101317;
+  --superficie: #181c22;
+  --tinta: #edeff2;
+  --tinta-suave: #a0a8b4;
+  --pauta: #262c35;
+  --borde-control: #626b7b;
+  --marca: #7fa9ff;
+  --marca-texto: #0b1220;
+  --critico: #ff9585;
+  --critico-fondo: #2a1714;
+  --riesgo: #e8b04b;
+  --riesgo-fondo: #241b0c;
+  --sano: #7fc79a;
+  --sano-fondo: #12251a;
+  --ocre: #e8b04b;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(18, 64, 143, 0.12);
+  }
+
+  body {
+    margin: 0;
+    background: var(--papel);
+    color: var(--tinta);
+    font-family: theme('fontFamily.sans');
+    font-size: 15px;
+    line-height: 22px;
+    touch-action: manipulation;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Toda cifra: tabular y sin saltos raros. */
+  .cifra {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  h1,
+  h2 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--marca);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* El elemento con foco nunca queda debajo del encabezado fijo. */
+  [tabindex],
+  a,
+  button {
+    scroll-margin-top: 96px;
+    scroll-margin-bottom: 96px;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+}
+
+@layer components {
+  .enlace-salto {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    background: var(--marca);
+    color: var(--marca-texto);
+    padding: 8px 16px;
+  }
+  .enlace-salto:focus {
+    left: 8px;
+    top: 8px;
+  }
+
+  .boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition:
+      background-color var(--mov-corto) var(--curva),
+      color var(--mov-corto) var(--curva),
+      border-color var(--mov-corto) var(--curva),
+      opacity var(--mov-corto) var(--curva);
+  }
+  @media (pointer: coarse) {
+    .boton {
+      min-height: 44px;
+    }
+  }
+  .boton svg {
+    flex-shrink: 0;
+  }
+  .boton:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .boton-primario {
+    background: var(--marca);
+    color: var(--marca-texto);
+  }
+  .boton-primario:hover:not(:disabled) {
+    filter: brightness(1.12);
+  }
+
+  .boton-secundario {
+    border-color: var(--borde-control);
+    color: var(--tinta);
+    background: transparent;
+  }
+  .boton-secundario:hover:not(:disabled) {
+    background: var(--papel);
+  }
+
+  .boton-sutil {
+    color: var(--tinta-suave);
+    background: transparent;
+    padding: 0 8px;
+  }
+  .boton-sutil:hover:not(:disabled) {
+    background: var(--papel);
+    color: var(--tinta);
+  }
+
+  .boton-destructivo {
+    color: var(--critico);
+    border-color: var(--critico);
+    background: transparent;
+  }
+
+  .panel {
+    background: var(--superficie);
+    border: 1px solid var(--pauta);
+    border-radius: 6px;
+  }
+
+  .campo {
+    min-height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--borde-control);
+    border-radius: 4px;
+    background: var(--superficie);
+    color: var(--tinta);
+    font-size: 14px;
+  }
+
+  .encabezado-columna {
+    font-family: theme('fontFamily.narrow');
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--tinta-suave);
+  }
+}
+
+/* Franjas de seguridad de la app instalada. */
+.inset-arriba {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.inset-abajo {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media print {
+  .no-imprimir {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .panel {
+    border-color: #999;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
