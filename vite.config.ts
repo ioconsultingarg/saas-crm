@@ -2,16 +2,11 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// En GitHub Actions el subdirectorio sale solo del nombre del repo
-// (ioconsultingarg/saas-crm -> /saas-crm/). Localmente queda en la raiz.
-// BASE_PATH permite forzarlo a mano; va SIN barras para que Git Bash en
-// Windows no lo convierta en una ruta de disco.
-const repo = process.env.GITHUB_REPOSITORY?.split('/')[1]
-const manual = process.env.BASE_PATH?.replace(/^\/+|\/+$/g, '')
-const base = manual ? `/${manual}/` : repo ? `/${repo}/` : '/'
+// En desarrollo el sitio vive en la raiz. Para publicar en GitHub Pages,
+// `npm run publicar` pasa --base /saas-crm/ y --outDir docs por linea de
+// comandos, que es lo que lee Pages desde la rama main.
 
 export default defineConfig({
-  base,
   build: {
     rollupOptions: {
       output: {

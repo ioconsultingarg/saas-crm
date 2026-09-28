@@ -38,17 +38,24 @@ npm run dev
 
 ## Publicación
 
-Cada push a `main` dispara el workflow de GitHub Actions (`.github/workflows/pages.yml`), que corre los tests, construye y publica en GitHub Pages:
+El sitio se publica con **GitHub Pages desde la rama `main`, carpeta `/docs`**, igual que el resto de los demos del portfolio.
 
 **https://ioconsultingarg.github.io/saas-crm/**
 
-El subdirectorio se deriva solo del nombre del repositorio, así que no hay nada que configurar. Para reproducir ese build localmente:
+A diferencia de los demos estáticos, este proyecto se compila, así que `docs/` contiene el resultado del build y **está versionado a propósito**. El flujo cada vez que cambia algo de la app es:
 
 ```bash
-BASE_PATH=saas-crm npm run build
+npm run publicar
+git add -A
+git commit -m "..."
+git push
 ```
 
-`BASE_PATH` va **sin barras** a propósito: con `/saas-crm/`, Git Bash en Windows lo convierte en una ruta de disco y el build sale roto.
+`npm run publicar` compila con `--base /saas-crm/` (el subdirectorio donde vive el sitio) y `--outDir docs`. Incluye un `.nojekyll` para que Pages sirva los archivos tal cual, sin procesarlos con Jekyll.
+
+> **Ojo con esto:** si cambiás la app y commiteás sin correr `npm run publicar` antes, el sitio publicado queda con la versión anterior mientras el código muestra la nueva. Si algo no se ve reflejado online, lo primero a revisar es si `docs/` está al día.
+
+`npm run build` sigue existiendo para desarrollo: compila a `dist/` con base en la raíz y no toca lo publicado.
 
 ## Decisiones que conviene no revertir
 
