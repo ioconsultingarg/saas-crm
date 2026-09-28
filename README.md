@@ -38,24 +38,21 @@ npm run dev
 
 ## Publicación
 
-El sitio se publica con **GitHub Pages desde la rama `main`, carpeta `/docs`**, igual que el resto de los demos del portfolio.
+**https://ioconsultingarg.github.io/saas-crm/** — GitHub Pages desde `main` / `(root)`, igual que el resto de los demos del portfolio. No hay que configurar nada en GitHub.
 
-**https://ioconsultingarg.github.io/saas-crm/**
-
-A diferencia de los demos estáticos, este proyecto se compila, así que `docs/` contiene el resultado del build y **está versionado a propósito**. El flujo cada vez que cambia algo de la app es:
+El código fuente vive en `app/` y **el sitio compilado se escribe en la raíz del repositorio**: la raíz *es* el sitio. Por eso conviven `index.html`, `assets/` y `sw.js` con `package.json` y `app/`.
 
 ```bash
-npm run publicar
-git add -A
-git commit -m "..."
-git push
+npm run build     # compila a la raiz
+git add -A && git commit -m "..." && git push
 ```
 
-`npm run publicar` compila con `--base /saas-crm/` (el subdirectorio donde vive el sitio) y `--outDir docs`. Incluye un `.nojekyll` para que Pages sirva los archivos tal cual, sin procesarlos con Jekyll.
+Detalles que evitan sorpresas:
 
-> **Ojo con esto:** si cambiás la app y commiteás sin correr `npm run publicar` antes, el sitio publicado queda con la versión anterior mientras el código muestra la nueva. Si algo no se ve reflejado online, lo primero a revisar es si `docs/` está al día.
+- `base: './'` — rutas relativas. El sitio anda en cualquier subdirectorio sin pasarle nada al build.
+- `emptyOutDir` está **desactivado**: vaciar la raíz borraría el repositorio. La limpieza la hace `scripts/limpiar-salida.mjs`, que borra por lista blanca sólo los artefactos del build anterior y nunca toca `app/`, `scripts/` ni la configuración.
 
-`npm run build` sigue existiendo para desarrollo: compila a `dist/` con base en la raíz y no toca lo publicado.
+> **Ojo:** si cambiás la app y commiteás sin correr `npm run build` antes, el sitio publicado queda con la versión anterior. Si algo no se ve reflejado online, es lo primero a revisar.
 
 ## Decisiones que conviene no revertir
 
@@ -71,7 +68,7 @@ git push
 React 18 + TypeScript + Vite + Tailwind, Recharts para el gráfico, papaparse para el CSV, `vite-plugin-pwa` para el service worker. Sin backend, sin router externo (el estado vive en la URL con enrutado por hash, así el botón atrás funciona), sin state manager. Fechas e importes con `Intl` y locale `es-AR`.
 
 ```
-src/
+app/src/
   data/       datos semilla: 10 clientes escritos a mano + 402 generados con semilla fija
   lib/        calculos.ts (cadencia, riesgo, segmento) · formato.ts · csv.ts
   vistas/     ListaDelLunes · FichaCliente · Cartera · ParteDeCartera · Importar
