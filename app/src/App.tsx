@@ -13,6 +13,7 @@ import { Cartera } from './vistas/Cartera'
 import { ParteDeCartera } from './vistas/ParteDeCartera'
 import { Importar } from './vistas/Importar'
 import { Ruta } from './vistas/Ruta'
+import { Sincronizacion } from './vistas/Sincronizacion'
 import { FichaComercio } from './vistas/FichaComercio'
 import { Catalogo } from './vistas/Catalogo'
 import { CarritoPedido } from './vistas/CarritoPedido'
@@ -135,6 +136,8 @@ export default function App() {
             alFiltrar={(c) => navegar(c)}
           />
         )
+      case 'sincronizar':
+        return <Sincronizacion alTerminar={() => irA('ruta')} />
       case 'ruta':
         return (
           <Ruta

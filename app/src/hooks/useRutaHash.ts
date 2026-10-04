@@ -4,7 +4,7 @@ export type Vista =
   // comercial
   | 'panel' | 'pipeline' | 'empresas' | 'reportes'
   // calle
-  | 'ruta' | 'catalogo' | 'carrito' | 'cierre'
+  | 'sincronizar' | 'ruta' | 'catalogo' | 'carrito' | 'cierre'
   // operación
   | 'operacion' | 'aprobaciones' | 'stock' | 'cuentas' | 'rutas'
   // recompra
@@ -14,7 +14,7 @@ export type Vista =
 
 const VISTAS: Vista[] = [
   'panel', 'pipeline', 'empresas', 'reportes',
-  'ruta', 'catalogo', 'carrito', 'cierre',
+  'sincronizar', 'ruta', 'catalogo', 'carrito', 'cierre',
   'operacion', 'aprobaciones', 'stock', 'cuentas', 'rutas',
   'lista', 'cartera', 'parte', 'importar', 'configuracion',
 ]

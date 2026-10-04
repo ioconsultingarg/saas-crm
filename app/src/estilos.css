@@ -268,6 +268,57 @@
   }
 }
 
+/*
+ * Enlaces de texto dentro de tablas y listas: en escritorio miden lo que mide
+ * la linea, que con mouse esta bien y mantiene la densidad. En pantallas
+ * tactiles se les amplia el area de toque a 44 px con un pseudo-elemento, que
+ * no ocupa espacio en el layout y por lo tanto no afloja la tabla.
+ *
+ * Se dispara por puntero grueso O por ancho chico: hay telefonos y tablets
+ * donde `pointer: coarse` no matchea como uno espera, y el ancho es la senal
+ * mas confiable de que se esta tocando con el dedo.
+ */
+@media (pointer: coarse), (max-width: 767px) {
+  main button:not(.boton):not([role='switch']),
+  main a:not(.boton) {
+    position: relative;
+  }
+  main button:not(.boton):not([role='switch'])::after,
+  main a:not(.boton)::after {
+    content: '';
+    position: absolute;
+    inset: -14px -6px;
+  }
+
+  /* Los interruptores miden 44x26: se les amplia el alto sin moverlos. */
+  main [role='switch'] {
+    position: relative;
+  }
+  main [role='switch']::after {
+    content: '';
+    position: absolute;
+    inset: -9px -4px;
+  }
+}
+
+/*
+ * Un item de grilla tiene min-width:auto, asi que no baja de su contenido:
+ * una tabla ancha adentro estira la columna y desborda la pagina entera.
+ * Esto los deja encoger; el scroll queda contenido en la tabla.
+ */
+main .grid > * {
+  min-width: 0;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.girando {
+  animation: girar 900ms linear infinite;
+}
+
 /* Franjas de seguridad de la app instalada. */
 .inset-arriba {
   padding-top: env(safe-area-inset-top, 0px);

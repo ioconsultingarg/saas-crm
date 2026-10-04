@@ -105,38 +105,40 @@ export function Reportes({ oportunidades }: { oportunidades: Oportunidad[] }) {
 
       <div className="grid gap-4 escritorio:grid-cols-3">
         <Panel titulo="Productividad por vendedor" className="escritorio:col-span-2">
-          <table className="w-full text-dato">
-            <caption className="sr-only">Productividad por vendedor</caption>
-            <thead>
-              <tr>
-                <th scope="col" className="encabezado-columna text-left pb-2">Vendedor</th>
-                <th scope="col" className="encabezado-columna text-right pb-2">Actividades</th>
-                <th scope="col" className="encabezado-columna text-right pb-2">Abiertas</th>
-                <th scope="col" className="encabezado-columna text-right pb-2">Ganadas</th>
-                <th scope="col" className="encabezado-columna text-right pb-2">Cierre</th>
-                <th scope="col" className="encabezado-columna text-left pb-2 w-40">Facturado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {agentes.map((a) => (
-                <tr key={a.usuarioId} style={{ borderTop: '1px solid var(--pauta)' }}>
-                  <td className="py-2">
-                    <span className="flex items-center gap-2">
-                      <Avatar iniciales={a.iniciales} />
-                      <span className="truncate">{a.nombre}</span>
-                    </span>
-                  </td>
-                  <td className="py-2 text-right cifra">{num(a.actividades)}</td>
-                  <td className="py-2 text-right cifra">{num(a.abiertas)}</td>
-                  <td className="py-2 text-right cifra">{num(a.ganadas)}</td>
-                  <td className="py-2 text-right cifra">{pct(a.tasaGanadas)}</td>
-                  <td className="py-2">
-                    <Barra valor={a.valorGanado} maximo={maxAgente} color="var(--e-ganado)" etiqueta={pesosARS(a.valorGanado)} />
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-dato" style={{ minWidth: 520 }}>
+              <caption className="sr-only">Productividad por vendedor</caption>
+              <thead>
+                <tr>
+                  <th scope="col" className="encabezado-columna text-left pb-2">Vendedor</th>
+                  <th scope="col" className="encabezado-columna text-right pb-2">Actividades</th>
+                  <th scope="col" className="encabezado-columna text-right pb-2">Abiertas</th>
+                  <th scope="col" className="encabezado-columna text-right pb-2">Ganadas</th>
+                  <th scope="col" className="encabezado-columna text-right pb-2">Cierre</th>
+                  <th scope="col" className="encabezado-columna text-left pb-2 w-40">Facturado</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {agentes.map((a) => (
+                  <tr key={a.usuarioId} style={{ borderTop: '1px solid var(--pauta)' }}>
+                    <td className="py-2">
+                      <span className="flex items-center gap-2">
+                        <Avatar iniciales={a.iniciales} />
+                        <span className="truncate">{a.nombre}</span>
+                      </span>
+                    </td>
+                    <td className="py-2 text-right cifra">{num(a.actividades)}</td>
+                    <td className="py-2 text-right cifra">{num(a.abiertas)}</td>
+                    <td className="py-2 text-right cifra">{num(a.ganadas)}</td>
+                    <td className="py-2 text-right cifra">{pct(a.tasaGanadas)}</td>
+                    <td className="py-2">
+                      <Barra valor={a.valorGanado} maximo={maxAgente} color="var(--e-ganado)" etiqueta={pesosARS(a.valorGanado)} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </Panel>
 
         <Panel titulo="Por qué se pierden">
@@ -155,29 +157,31 @@ export function Reportes({ oportunidades }: { oportunidades: Oportunidad[] }) {
       </div>
 
       <Panel titulo="Rendimiento por origen">
-        <table className="w-full text-dato">
-          <caption className="sr-only">Oportunidades por origen</caption>
-          <thead>
-            <tr>
-              <th scope="col" className="encabezado-columna text-left pb-2">Origen</th>
-              <th scope="col" className="encabezado-columna text-right pb-2">Oportunidades</th>
-              <th scope="col" className="encabezado-columna text-right pb-2">Ganadas</th>
-              <th scope="col" className="encabezado-columna text-right pb-2">Tasa</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orig.map((o) => (
-              <tr key={o.origen} style={{ borderTop: '1px solid var(--pauta)' }}>
-                <td className="py-2">{o.origen}</td>
-                <td className="py-2 text-right cifra">{num(o.cantidad)}</td>
-                <td className="py-2 text-right cifra">{num(o.ganadas)}</td>
-                <td className="py-2 text-right cifra" style={{ color: o.tasa >= 0.4 ? 'var(--sano)' : undefined }}>
-                  {pct(o.tasa)}
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-dato" style={{ minWidth: 520 }}>
+            <caption className="sr-only">Oportunidades por origen</caption>
+            <thead>
+              <tr>
+                <th scope="col" className="encabezado-columna text-left pb-2">Origen</th>
+                <th scope="col" className="encabezado-columna text-right pb-2">Oportunidades</th>
+                <th scope="col" className="encabezado-columna text-right pb-2">Ganadas</th>
+                <th scope="col" className="encabezado-columna text-right pb-2">Tasa</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {orig.map((o) => (
+                <tr key={o.origen} style={{ borderTop: '1px solid var(--pauta)' }}>
+                  <td className="py-2">{o.origen}</td>
+                  <td className="py-2 text-right cifra">{num(o.cantidad)}</td>
+                  <td className="py-2 text-right cifra">{num(o.ganadas)}</td>
+                  <td className="py-2 text-right cifra" style={{ color: o.tasa >= 0.4 ? 'var(--sano)' : undefined }}>
+                    {pct(o.tasa)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </Panel>
     </div>
   )

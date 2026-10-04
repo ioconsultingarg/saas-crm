@@ -156,39 +156,41 @@ export function Dashboard({ oportunidades, clientes, irAPipeline, irACartera, ab
       {/* Equipo + actividad */}
       <div className="grid gap-4 escritorio:grid-cols-3">
         <Panel titulo="Rendimiento del equipo" className="escritorio:col-span-2">
-          <table className="w-full text-dato">
-            <caption className="sr-only">Rendimiento por vendedor</caption>
-            <thead>
-              <tr>
-                <th scope="col" className="encabezado-columna text-left pb-2">Vendedor</th>
-                <th scope="col" className="encabezado-columna text-right pb-2">Abiertas</th>
-                <th scope="col" className="encabezado-columna text-right pb-2">Cierre</th>
-                <th scope="col" className="encabezado-columna text-left pb-2 w-40">Ganado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {agentes.map((a) => (
-                <tr key={a.usuarioId} style={{ borderTop: '1px solid var(--pauta)' }}>
-                  <td className="py-2">
-                    <span className="flex items-center gap-2">
-                      <Avatar iniciales={a.iniciales} />
-                      <span className="truncate">{a.nombre}</span>
-                    </span>
-                  </td>
-                  <td className="py-2 text-right cifra">{num(a.abiertas)}</td>
-                  <td className="py-2 text-right cifra">{pct(a.tasaGanadas)}</td>
-                  <td className="py-2">
-                    <Barra
-                      valor={a.valorGanado}
-                      maximo={maxAgente}
-                      color="var(--e-ganado)"
-                      etiqueta={pesosARS(a.valorGanado)}
-                    />
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-dato" style={{ minWidth: 520 }}>
+              <caption className="sr-only">Rendimiento por vendedor</caption>
+              <thead>
+                <tr>
+                  <th scope="col" className="encabezado-columna text-left pb-2">Vendedor</th>
+                  <th scope="col" className="encabezado-columna text-right pb-2">Abiertas</th>
+                  <th scope="col" className="encabezado-columna text-right pb-2">Cierre</th>
+                  <th scope="col" className="encabezado-columna text-left pb-2 w-40">Ganado</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {agentes.map((a) => (
+                  <tr key={a.usuarioId} style={{ borderTop: '1px solid var(--pauta)' }}>
+                    <td className="py-2">
+                      <span className="flex items-center gap-2">
+                        <Avatar iniciales={a.iniciales} />
+                        <span className="truncate">{a.nombre}</span>
+                      </span>
+                    </td>
+                    <td className="py-2 text-right cifra">{num(a.abiertas)}</td>
+                    <td className="py-2 text-right cifra">{pct(a.tasaGanadas)}</td>
+                    <td className="py-2">
+                      <Barra
+                        valor={a.valorGanado}
+                        maximo={maxAgente}
+                        color="var(--e-ganado)"
+                        etiqueta={pesosARS(a.valorGanado)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <p className="text-micro text-tinta-suave mt-3">
             Se mide la cartera y su resultado, no a las personas: no hay ubicación, ni horarios, ni
             ranking atado a evaluación.

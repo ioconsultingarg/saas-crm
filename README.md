@@ -36,6 +36,10 @@ npm run dev
 | `npm run preview` | Sirve `dist/` para probar la instalación y el modo sin conexión |
 | `npm test` | Verifica que los totales de la demo cierren |
 
+## Manual de uso
+
+La guía completa, en el orden en que se usa el producto, está en [MANUAL.md](MANUAL.md).
+
 ## Publicación
 
 **https://ioconsultingarg.github.io/saas-crm/** — GitHub Pages desde `main` / `(root)`, igual que el resto de los demos del portfolio. No hay que configurar nada en GitHub.

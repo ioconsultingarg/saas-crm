@@ -178,7 +178,7 @@ export function Pipeline({ oportunidades, mover, abrirEmpresa }: Props) {
                             <button
                               type="button"
                               className="boton boton-sutil w-full justify-start"
-                              style={{ minHeight: 32 }}
+                              style={{ minHeight: 40 }}
                               aria-expanded={menu === o.id}
                               onClick={() => setMenu(menu === o.id ? null : o.id)}
                             >

@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import {
-  BarChart3, Boxes, Building2, CalendarCheck, ClipboardCheck, Download, KanbanSquare,
+  BarChart3, Boxes, Building2, CalendarCheck, ClipboardCheck, CloudDownload, Download, KanbanSquare,
   LayoutDashboard, LogOut, Map, Menu, Moon, Navigation, Package, Receipt, Settings,
   ShoppingCart, Sun, Upload, Users, Wallet, X,
 } from 'lucide-react'
@@ -20,6 +20,7 @@ const COMERCIAL: Destino[] = [
 ]
 
 const CALLE: Destino[] = [
+  { vista: 'sincronizar', texto: 'Preparar el día', corto: 'Preparar', Icono: CloudDownload },
   { vista: 'ruta', texto: 'Mi ruta de hoy', corto: 'Ruta', Icono: Navigation },
   { vista: 'catalogo', texto: 'Catálogo', corto: 'Catálogo', Icono: Package },
   { vista: 'carrito', texto: 'Pedido en curso', corto: 'Pedido', Icono: ShoppingCart },
@@ -49,7 +50,7 @@ const AJUSTES: Destino[] = [
  * Los cinco destinos de la barra inferior en móvil, elegidos para el
  * preventista: su día pasa por la ruta, el catálogo y el pedido.
  */
-const MOVIL: Destino[] = [CALLE[0], CALLE[1], CALLE[2], COMERCIAL[0], RECOMPRA[0]]
+const MOVIL: Destino[] = [CALLE[1], CALLE[2], CALLE[3], COMERCIAL[0], RECOMPRA[0]]
 
 interface Props {
   vista: Vista
@@ -183,16 +184,18 @@ export function Marco({ vista, irA, usuario, salir, esOscuro, alternarTema, pued
           {MOVIL.map((d) => {
             const activo = vista === d.vista
             return (
-              <li key={d.vista}>
+              // min-w-0: sin esto cada columna toma el ancho de su etiqueta y la
+              // barra entera desborda la pantalla en un telefono angosto.
+              <li key={d.vista} className="min-w-0">
                 <button
                   type="button"
                   onClick={() => irA(d.vista)}
                   aria-current={activo ? 'page' : undefined}
-                  className="w-full grid justify-items-center gap-1 py-2"
+                  className="w-full grid justify-items-center gap-1 py-2 min-w-0"
                   style={{ minHeight: 56, color: activo ? 'var(--marca)' : 'var(--tinta-suave)' }}
                 >
                   <d.Icono size={20} strokeWidth={1.5} aria-hidden="true" />
-                  <span className="text-columna">{d.corto}</span>
+                  <span className="text-columna truncate max-w-full px-0.5">{d.corto}</span>
                 </button>
               </li>
             )
