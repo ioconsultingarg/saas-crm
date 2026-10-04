@@ -71,7 +71,8 @@ export function ListaDelLunes({
   return (
     <>
       <header className="mb-4">
-        <p className="encabezado-columna">En riesgo esta semana</p>
+        <h1 className="font-display text-titulo">Lista del lunes</h1>
+        <p className="encabezado-columna mt-2">En riesgo esta semana</p>
         <p className="font-display cifra" style={{ fontSize: 34, lineHeight: '38px' }}>
           {pesosARS(totalEnRiesgo)}
         </p>

@@ -1,18 +1,21 @@
 import { useCallback, useEffect, useState } from 'react'
 
 export type Vista =
-  | 'panel'
-  | 'pipeline'
-  | 'empresas'
-  | 'reportes'
-  | 'lista'
-  | 'cartera'
-  | 'parte'
-  | 'importar'
+  // comercial
+  | 'panel' | 'pipeline' | 'empresas' | 'reportes'
+  // calle
+  | 'ruta' | 'catalogo' | 'carrito' | 'cierre'
+  // operación
+  | 'operacion' | 'aprobaciones' | 'stock' | 'cuentas' | 'rutas'
+  // recompra
+  | 'lista' | 'cartera' | 'parte' | 'importar'
+  // cuenta
   | 'configuracion'
 
 const VISTAS: Vista[] = [
   'panel', 'pipeline', 'empresas', 'reportes',
+  'ruta', 'catalogo', 'carrito', 'cierre',
+  'operacion', 'aprobaciones', 'stock', 'cuentas', 'rutas',
   'lista', 'cartera', 'parte', 'importar', 'configuracion',
 ]
 
@@ -20,6 +23,8 @@ export interface Ruta {
   vista: Vista
   cliente?: string
   empresa?: string
+  comercio?: string
+  visita?: string
   vendedor?: string
   zona?: string
   segmento?: string
@@ -33,12 +38,17 @@ function leer(): Ruta {
 
   const esCliente = partes[0] === 'cliente'
   const esEmpresa = partes[0] === 'empresa'
-  const vista = (VISTAS as string[]).includes(partes[0]) ? (partes[0] as Vista) : esCliente ? 'lista' : esEmpresa ? 'empresas' : 'panel'
+  const esComercio = partes[0] === 'comercio'
+  const vista = (VISTAS as string[]).includes(partes[0])
+    ? (partes[0] as Vista)
+    : esCliente ? 'lista' : esEmpresa ? 'empresas' : esComercio ? 'ruta' : 'panel'
 
   return {
     vista,
     cliente: esCliente ? partes[1] : undefined,
     empresa: esEmpresa ? partes[1] : undefined,
+    comercio: esComercio ? partes[1] : undefined,
+    visita: esComercio ? partes[2] : undefined,
     vendedor: p.get('vendedor') ?? undefined,
     zona: p.get('zona') ?? undefined,
     segmento: p.get('segmento') ?? undefined,
@@ -51,7 +61,13 @@ function escribir(r: Ruta): string {
   if (r.zona) p.set('zona', r.zona)
   if (r.segmento) p.set('segmento', r.segmento)
   const consulta = p.toString()
-  const camino = r.cliente ? `cliente/${r.cliente}` : r.empresa ? `empresa/${r.empresa}` : r.vista
+  const camino = r.cliente
+    ? `cliente/${r.cliente}`
+    : r.empresa
+      ? `empresa/${r.empresa}`
+      : r.comercio
+        ? `comercio/${r.comercio}${r.visita ? `/${r.visita}` : ''}`
+        : r.vista
   return `#/${camino}${consulta ? `?${consulta}` : ''}`
 }
 
@@ -69,6 +85,8 @@ export function useRutaHash() {
   }, [])
 
   const navegar = useCallback((cambio: Partial<Ruta>) => {
+    // El spread ya pisa con undefined las claves presentes en `cambio`, que es
+    // justamente como se limpian cliente/empresa/comercio al cambiar de vista.
     window.location.hash = escribir({ ...leer(), ...cambio })
     setRuta(leer())
   }, [])
@@ -78,10 +96,16 @@ export function useRutaHash() {
   }, [])
 
   const abrirEmpresa = useCallback((id: string) => {
-    window.location.hash = escribir({ ...leer(), empresa: id, cliente: undefined })
+    window.location.hash = escribir({ ...leer(), empresa: id, cliente: undefined, comercio: undefined })
+  }, [])
+
+  const abrirComercio = useCallback((empresaId: string, visitaId?: string) => {
+    window.location.hash = escribir({
+      ...leer(), comercio: empresaId, visita: visitaId, cliente: undefined, empresa: undefined,
+    })
   }, [])
 
   const volver = useCallback(() => window.history.back(), [])
 
-  return { ruta, navegar, abrirCliente, abrirEmpresa, volver }
+  return { ruta, navegar, abrirCliente, abrirEmpresa, abrirComercio, volver }
 }

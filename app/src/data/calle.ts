@@ -90,11 +90,18 @@ export const LOTES_POR_VENCER = ARTICULOS.flatMap((a) =>
 
 /* --------------------------------------------------------- cuenta corriente */
 
-export const CUENTAS: CuentaCorriente[] = EMPRESAS.map((e) => {
+export const CUENTAS: CuentaCorriente[] = EMPRESAS.map((e, i) => {
   const limite = entre(3, 30) * 100_000
-  const saldo = Math.round(limite * (0.1 + rnd() * 1.15))
-  const vencido = rnd() < 0.28 ? Math.round(saldo * (0.2 + rnd() * 0.6)) : 0
-  const uso = saldo / limite
+
+  // Reparto deliberado: 5 de cada 7 sanas, 1 cerca del limite, 1 con problema.
+  // El modulo 7 garantiza que CUALQUIER tramo de la cartera tenga las tres
+  // situaciones: si toda la ruta sale verde el semaforo no se ve nunca, y si
+  // sale toda roja el preventista no puede vender nada. Las dos rompen la demo.
+  const grupo = i % 7
+  const uso = grupo < 5 ? 0.05 + rnd() * 0.6 : grupo === 5 ? 0.82 + rnd() * 0.15 : 0.95 + rnd() * 0.3
+  const saldo = Math.round(limite * uso)
+  const vencido = grupo === 6 && rnd() < 0.75 ? Math.round(saldo * (0.2 + rnd() * 0.5)) : 0
+
   return {
     empresaId: e.id,
     limiteCredito: limite,

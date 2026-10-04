@@ -1,7 +1,8 @@
 import { useState, type ReactNode } from 'react'
 import {
-  BarChart3, Building2, CalendarCheck, Download, KanbanSquare, LayoutDashboard,
-  LogOut, Menu, Moon, Settings, Sun, Upload, Users, X,
+  BarChart3, Boxes, Building2, CalendarCheck, ClipboardCheck, Download, KanbanSquare,
+  LayoutDashboard, LogOut, Map, Menu, Moon, Navigation, Package, Receipt, Settings,
+  ShoppingCart, Sun, Upload, Users, Wallet, X,
 } from 'lucide-react'
 import type { Vista } from '../hooks/useRutaHash'
 import type { Usuario } from '../tipos-crm'
@@ -18,6 +19,21 @@ const COMERCIAL: Destino[] = [
   { vista: 'reportes', texto: 'Reportes', corto: 'Reportes', Icono: BarChart3 },
 ]
 
+const CALLE: Destino[] = [
+  { vista: 'ruta', texto: 'Mi ruta de hoy', corto: 'Ruta', Icono: Navigation },
+  { vista: 'catalogo', texto: 'Catálogo', corto: 'Catálogo', Icono: Package },
+  { vista: 'carrito', texto: 'Pedido en curso', corto: 'Pedido', Icono: ShoppingCart },
+  { vista: 'cierre', texto: 'Cerrar visita', corto: 'Cierre', Icono: Receipt },
+]
+
+const OPERACION: Destino[] = [
+  { vista: 'operacion', texto: 'Panel del día', corto: 'Operación', Icono: Map },
+  { vista: 'aprobaciones', texto: 'Aprobación de pedidos', corto: 'Aprobar', Icono: ClipboardCheck },
+  { vista: 'stock', texto: 'Stock y lotes', corto: 'Stock', Icono: Boxes },
+  { vista: 'cuentas', texto: 'Cuentas corrientes', corto: 'Cuentas', Icono: Wallet },
+  { vista: 'rutas', texto: 'Rutas y preventistas', corto: 'Rutas', Icono: Map },
+]
+
 const RECOMPRA: Destino[] = [
   { vista: 'lista', texto: 'Lista del lunes', corto: 'Lunes', Icono: CalendarCheck },
   { vista: 'cartera', texto: 'Cartera', corto: 'Cartera', Icono: Users },
@@ -29,8 +45,11 @@ const AJUSTES: Destino[] = [
   { vista: 'configuracion', texto: 'Configuración', corto: 'Ajustes', Icono: Settings },
 ]
 
-/** Los cinco destinos de la barra inferior en móvil. */
-const MOVIL: Destino[] = [COMERCIAL[0], COMERCIAL[1], COMERCIAL[2], RECOMPRA[0], COMERCIAL[3]]
+/**
+ * Los cinco destinos de la barra inferior en móvil, elegidos para el
+ * preventista: su día pasa por la ruta, el catálogo y el pedido.
+ */
+const MOVIL: Destino[] = [CALLE[0], CALLE[1], CALLE[2], COMERCIAL[0], RECOMPRA[0]]
 
 interface Props {
   vista: Vista
@@ -85,6 +104,8 @@ export function Marco({ vista, irA, usuario, salir, esOscuro, alternarTema, pued
 
       <nav aria-label="Principal" className="flex-1 overflow-y-auto pb-3">
         <Grupo titulo="Comercial" destinos={COMERCIAL} />
+        <Grupo titulo="En la calle" destinos={CALLE} />
+        <Grupo titulo="Operación" destinos={OPERACION} />
         <Grupo titulo="Recompra" destinos={RECOMPRA} />
         <Grupo titulo="Cuenta" destinos={AJUSTES} />
       </nav>

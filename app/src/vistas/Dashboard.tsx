@@ -37,6 +37,13 @@ export function Dashboard({ oportunidades, clientes, irAPipeline, irACartera, ab
 
   return (
     <div className="grid gap-4">
+      <header>
+        <h1 className="font-display text-titulo">Panel</h1>
+        <p className="text-tinta-suave text-cuerpo">
+          Embudo, tareas del día y estado de la cartera, de un vistazo.
+        </p>
+      </header>
+
       {/* Tira de métricas */}
       <div className="grid gap-3 grid-cols-2 escritorio:grid-cols-4">
         <Kpi etiqueta="Proyección ponderada" valor={pesosARS(r.proyeccion)} nota="del pipeline abierto" destacado />
