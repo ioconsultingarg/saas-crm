@@ -32,10 +32,19 @@ export default {
       // prohibe. Se la nombra en la pila para que la use quien la tenga (en
       // Apple viene con el sistema; en Windows, si el usuario la instalo), y
       // detras va la fuente de interfaz nativa de cada plataforma.
+      // Optica por tamano, igual que hace SF: la variante Text esta pensada
+      // para cuerpo y tablas, la Display para titulos. Windows tiene la misma
+      // division en Segoe UI Variable, asi que la pila la respeta en los dos.
       sans: [
         '-apple-system', 'BlinkMacSystemFont',
-        '"SF Pro Text"', '"SF Pro Display"', '"SF Pro"',
+        '"SF Pro Text"', '"SF Pro"',
         '"Segoe UI Variable Text"', '"Segoe UI Variable"', '"Segoe UI"',
+        'Roboto', 'ui-sans-serif', 'system-ui', 'sans-serif',
+      ],
+      titulo: [
+        '-apple-system', 'BlinkMacSystemFont',
+        '"SF Pro Display"', '"SF Pro"',
+        '"Segoe UI Variable Display"', '"Segoe UI Variable"', '"Segoe UI"',
         'Roboto', 'ui-sans-serif', 'system-ui', 'sans-serif',
       ],
       display: ['"Newsreader Variable"', 'Newsreader', 'Georgia', 'serif'],

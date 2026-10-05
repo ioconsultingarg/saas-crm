@@ -154,6 +154,17 @@
   h3 {
     letter-spacing: -0.012em;
   }
+
+  /*
+   * A partir de 20 px conviene la variante Display: tiene el espaciado mas
+   * cerrado y las aberturas mas chicas, que a ese tamano se leen mejor. Debajo
+   * de 20 px, la Text. Es la misma division que hacen SF y Segoe UI Variable.
+   */
+  h1,
+  h2,
+  .cifra-grande {
+    font-family: theme('fontFamily.titulo');
+  }
   p {
     text-wrap: pretty;
   }
