@@ -200,7 +200,17 @@ Hay un archivo de ejemplo para probarlo sin datos propios.
 
 ---
 
-## 9. Glosario
+## 9. Tipografía
+
+La interfaz usa la **fuente de interfaz del sistema**: en iPhone, iPad y Mac se ve **SF Pro**; en Windows, Segoe UI Variable; en Android, Roboto. Así la app se siente nativa en cada plataforma y se dibuja en el primer cuadro, sin esperar ninguna descarga.
+
+SF Pro no se puede servir como fuente web —la licencia de Apple lo prohíbe—, así que no se autoaloja: se la declara en la pila para que la use quien la tenga. Si trabajás en Windows y querés verla, se descarga gratis desde el sitio de desarrolladores de Apple e se instala como cualquier otra fuente.
+
+Las cifras grandes y los títulos de sección usan **Newsreader**, una serif de pantalla, que es la única fuente que la aplicación descarga.
+
+---
+
+## 10. Glosario
 
 **Cadencia** — cada cuántos días compra habitualmente un cliente.
 **Monto en riesgo** — lo que ese cliente facturaba por período, proyectado al tiempo que lleva sin comprar.

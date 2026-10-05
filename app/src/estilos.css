@@ -1,9 +1,10 @@
+/*
+ * Unica fuente que se descarga: la serif de las cifras grandes y los titulos.
+ * La interfaz usa la fuente de sistema (SF Pro en Apple, Segoe UI Variable en
+ * Windows, Roboto en Android), que ademas no cuesta una sola peticion y se
+ * pinta en el primer cuadro.
+ */
 @import '@fontsource-variable/newsreader';
-@import '@fontsource-variable/archivo';
-@import '@fontsource/archivo-narrow/500.css';
-@import '@fontsource/archivo-narrow/600.css';
-@import '@fontsource/jetbrains-mono/400.css';
-@import '@fontsource/jetbrains-mono/500.css';
 
 @tailwind base;
 @tailwind components;
@@ -139,6 +140,20 @@
   h2 {
     text-wrap: balance;
   }
+
+  /*
+   * SF (y las de sistema en general) piden tracking mas cerrado a medida que
+   * crece el tamano; en Apple el sistema cambia ademas de optica entre SF Pro
+   * Text y Display a partir de 20 px. Esto acompana ese comportamiento.
+   */
+  .font-display,
+  h1 {
+    letter-spacing: -0.021em;
+  }
+  h2,
+  h3 {
+    letter-spacing: -0.012em;
+  }
   p {
     text-wrap: pretty;
   }
@@ -258,7 +273,6 @@
   }
 
   .encabezado-columna {
-    font-family: theme('fontFamily.narrow');
     font-size: 12px;
     line-height: 16px;
     font-weight: 600;

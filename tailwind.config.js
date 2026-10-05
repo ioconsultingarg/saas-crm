@@ -28,10 +28,21 @@ export default {
     },
     borderRadius: { none: '0', sm: '2px', DEFAULT: '4px', md: '6px', full: '9999px' },
     fontFamily: {
+      // SF Pro no se puede servir como fuente web: la licencia de Apple lo
+      // prohibe. Se la nombra en la pila para que la use quien la tenga (en
+      // Apple viene con el sistema; en Windows, si el usuario la instalo), y
+      // detras va la fuente de interfaz nativa de cada plataforma.
+      sans: [
+        '-apple-system', 'BlinkMacSystemFont',
+        '"SF Pro Text"', '"SF Pro Display"', '"SF Pro"',
+        '"Segoe UI Variable Text"', '"Segoe UI Variable"', '"Segoe UI"',
+        'Roboto', 'ui-sans-serif', 'system-ui', 'sans-serif',
+      ],
       display: ['"Newsreader Variable"', 'Newsreader', 'Georgia', 'serif'],
-      sans: ['"Archivo Variable"', 'Archivo', 'system-ui', 'sans-serif'],
-      narrow: ['"Archivo Narrow"', '"Archivo Variable"', 'sans-serif'],
-      mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+      mono: [
+        'ui-monospace', 'SFMono-Regular', '"SF Mono"',
+        '"Cascadia Mono"', 'Menlo', 'Consolas', 'monospace',
+      ],
     },
     fontSize: {
       micro: ['13px', { lineHeight: '18px' }],
