@@ -1,6 +1,7 @@
 {
   "name": "io-crm",
   "private": true,
+  "license": "UNLICENSED",
   "version": "0.1.0",
   "type": "module",
   "description": "IO-CRM — demo del modulo Cartera: CRM de recompra para PyMEs y distribuidoras",
