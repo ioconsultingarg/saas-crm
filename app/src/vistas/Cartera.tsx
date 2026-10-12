@@ -85,7 +85,16 @@ export function Cartera({
         String(c.cadencia ?? ''), String(c.factMensual), c.a.segmento,
       ]),
     ]
-    const csv = filas.map((f) => f.map((v) => `"${v.replace(/"/g, '""')}"`).join(';')).join('\n')
+    // Excel y Sheets interpretan como formula toda celda que arranque con
+    // = + - @ (o tab / retorno). Como la razon social puede venir del CSV que
+    // importo el cliente desde su ERP, un valor tipo =HYPERLINK("http://...")
+    // se ejecutaria al abrir el export. El apostrofe la fuerza a texto.
+    const celda = (v: string) => {
+      const s = String(v ?? '')
+      const seguro = /^[=+\-@\t\r]/.test(s) ? `'${s}` : s
+      return `"${seguro.replace(/"/g, '""')}"`
+    }
+    const csv = filas.map((f) => f.map(celda).join(';')).join('\n')
     const url = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }))
     const a = document.createElement('a')
     a.href = url
