@@ -51,9 +51,11 @@ interface KpiProps {
   /** el número grande va en serif: es la firma visual del producto */
   destacado?: boolean
   estilo?: CSSProperties
+  /** ms de retraso en la entrada escalonada; sin esto no anima */
+  entraEn?: number
 }
 
-export function Kpi({ etiqueta, valor, nota, variacion, destacado, estilo }: KpiProps) {
+export function Kpi({ etiqueta, valor, nota, variacion, destacado, estilo, entraEn }: KpiProps) {
   const Flecha = variacion === undefined ? Minus : variacion >= 0 ? ArrowUpRight : ArrowDownRight
   const colorVar =
     variacion === undefined
@@ -63,7 +65,10 @@ export function Kpi({ etiqueta, valor, nota, variacion, destacado, estilo }: Kpi
         : 'var(--critico)'
 
   return (
-    <div className="panel p-4 flex flex-col gap-1" style={estilo}>
+    <div
+      className={`panel p-4 flex flex-col gap-1${entraEn === undefined ? '' : ' entra'}`}
+      style={entraEn === undefined ? estilo : { ...estilo, animationDelay: `${entraEn}ms` }}
+    >
       <p className="encabezado-columna">{etiqueta}</p>
       <p
         className={destacado ? 'font-display cifra' : 'cifra font-semibold'}

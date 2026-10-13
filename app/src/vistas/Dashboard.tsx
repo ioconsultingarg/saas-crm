@@ -45,11 +45,12 @@ export function Dashboard({ oportunidades, clientes, irAPipeline, irACartera, ab
       </header>
 
       {/* Tira de métricas */}
+      {/* Entrada escalonada: 60 ms entre tarjetas, y se termina. */}
       <div className="grid gap-3 grid-cols-2 escritorio:grid-cols-4">
-        <Kpi etiqueta="Proyección ponderada" valor={pesosARS(r.proyeccion)} nota="del pipeline abierto" destacado />
-        <Kpi etiqueta="Ganado" valor={pesosARS(r.valorGanado)} variacion={0.18} nota={`${num(r.ganadas)} negocios`} />
-        <Kpi etiqueta="Tasa de cierre" valor={pct(r.tasaGanadas)} nota={`${num(r.perdidas)} perdidas`} />
-        <Kpi etiqueta="Ciclo promedio" valor={`${num(r.cicloPromedioDias)} días`} nota="de alta a cierre" />
+        <Kpi etiqueta="Proyección ponderada" valor={pesosARS(r.proyeccion)} nota="del pipeline abierto" destacado entraEn={0} />
+        <Kpi etiqueta="Ganado" valor={pesosARS(r.valorGanado)} variacion={0.18} nota={`${num(r.ganadas)} negocios`} entraEn={60} />
+        <Kpi etiqueta="Tasa de cierre" valor={pct(r.tasaGanadas)} nota={`${num(r.perdidas)} perdidas`} entraEn={120} />
+        <Kpi etiqueta="Ciclo promedio" valor={`${num(r.cicloPromedioDias)} días`} nota="de alta a cierre" entraEn={180} />
       </div>
 
       {/* Bento: embudo ancho + tareas al costado */}
@@ -73,18 +74,30 @@ export function Dashboard({ oportunidades, clientes, irAPipeline, irACartera, ab
                     <span className="cifra">{pesosARS(p.valor)}</span>
                   </span>
                 </div>
-                {/* Ancho proporcional: el embudo se estrecha de verdad */}
+                {/*
+                  Ancho proporcional: el embudo se estrecha de verdad. El
+                  relleno es un elemento aparte que escala, para que la
+                  etiqueta no se deforme con el; aparece despues, cuando ya
+                  tiene fondo de color abajo y se puede leer.
+                */}
                 <div
                   className="rounded-sm relative overflow-hidden"
                   style={{
                     height: 30,
                     width: `${Math.max(12, (p.cantidad / maxEmbudo) * 100)}%`,
-                    background: COLOR_ETAPA[p.etapa],
                   }}
                 >
                   <span
-                    className="absolute inset-y-0 left-2 grid items-center text-micro font-semibold"
-                    style={{ color: 'var(--superficie)' }}
+                    aria-hidden="true"
+                    className="crece absolute inset-0 rounded-sm"
+                    style={{
+                      background: COLOR_ETAPA[p.etapa],
+                      animationDelay: `${120 + i * 70}ms`,
+                    }}
+                  />
+                  <span
+                    className="funde absolute inset-y-0 left-2 grid items-center text-micro font-semibold"
+                    style={{ color: 'var(--superficie)', animationDelay: `${420 + i * 70}ms` }}
                   >
                     {i === 0 ? '100%' : pct(p.conversionDesdeInicio)}
                   </span>

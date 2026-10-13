@@ -13,9 +13,16 @@ import { mesEtiqueta, num, pctPlano, pesosARS, pesosCorto } from '../lib/formato
 
 type Unidad = 'pesos' | 'unidades'
 
+/**
+ * El interruptor Pesos / Unidades es el momento que explica el producto: con
+ * inflacion, la facturacion en pesos sube mientras el volumen se derrumba. La
+ * linea tiene que DARSE VUELTA delante de quien mira, no saltar: ahi la
+ * animacion no decora, demuestra.
+ */
 export function GraficoCompras({ cliente }: { cliente: ClienteAnalizado }) {
   const [unidad, setUnidad] = useState<Unidad>('pesos')
   const idTabla = useId()
+
 
   const datos = cliente.serie.map((p) => ({
     mes: mesEtiqueta(p.mes),
@@ -56,6 +63,16 @@ export function GraficoCompras({ cliente }: { cliente: ClienteAnalizado }) {
         </div>
       </div>
 
+      {/*
+        El cambio de unidad NO se interpola. Se probaron isAnimationActive de
+        recharts, el remontaje de la serie con key, y un fundido del
+        contenedor: ninguno anima acá. Lo que sí transiciona es el color del
+        trazo (ver estilos.css), y con eso alcanza: la curva cambia de forma
+        y de color, que es lo que hace visible la inversión.
+
+        Si algún día se suma Motion al proyecto, este es el lugar donde más
+        rinde: interpolar el path entre las dos series.
+      */}
       <div style={{ height: 220 }}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={datos} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>

@@ -335,6 +335,56 @@ main .grid > * {
   min-width: 0;
 }
 
+/*
+ * Coreografia de entrada. Una sola, al abrir el panel, y se termina.
+ * Solo opacity y transform, asi que corre en el compositor.
+ *
+ * La regla global de prefers-reduced-motion mas abajo las baja a 0.001ms, con
+ * lo cual el estado final se aplica igual y nadie se queda con una tarjeta
+ * invisible.
+ */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes crecer {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes fundir {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.entra {
+  animation: aparecer 380ms var(--curva) backwards;
+}
+
+.crece {
+  transform-origin: left center;
+  animation: crecer 520ms var(--curva) backwards;
+}
+
+.funde {
+  animation: fundir 300ms var(--curva) backwards;
+}
+
 @keyframes girar {
   to {
     transform: rotate(360deg);
@@ -342,6 +392,22 @@ main .grid > * {
 }
 .girando {
   animation: girar 900ms linear infinite;
+}
+
+/*
+ * Recharts redibuja la curva pero no interpola el color: cuando el grafico
+ * pasa de pesos a unidades el trazo salta de azul a terracota de golpe.
+ * Estas dos reglas lo funden junto con la curva.
+ */
+.recharts-area-curve,
+.recharts-area-area {
+  transition:
+    stroke var(--mov-medio) var(--curva),
+    fill var(--mov-medio) var(--curva);
+}
+
+.recharts-surface stop {
+  transition: stop-color var(--mov-medio) var(--curva);
 }
 
 /* Franjas de seguridad de la app instalada. */
