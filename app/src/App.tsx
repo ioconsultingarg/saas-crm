@@ -29,6 +29,7 @@ import { useRutaHash } from './hooks/useRutaHash'
 import { useTema } from './hooks/useTema'
 import { useGestiones } from './hooks/useGestiones'
 import { useAuth } from './hooks/useAuth'
+import { useActualizacion } from './hooks/useActualizacion'
 import { usePipeline } from './hooks/usePipeline'
 import { analizarTodos, conAlerta } from './lib/calculos'
 import { CLIENTES, TOTAL_EN_RIESGO } from './data'
@@ -42,6 +43,7 @@ export default function App() {
   const { ruta, navegar, abrirCliente, abrirEmpresa, abrirComercio, volver } = useRutaHash()
   const { esOscuro, alternar } = useTema()
   const { usuario, entrar, salir } = useAuth()
+  const actualizacion = useActualizacion()
   const { gestiones, registrar, deshacer, reiniciar } = useGestiones()
   const { oportunidades, mover, deshacer: deshacerMov, ultimo } = usePipeline()
   const calle = useCalle()
@@ -65,7 +67,30 @@ export default function App() {
     setInstalador(null)
   }, [instalador])
 
-  if (!usuario) return <Login entrar={entrar} />
+  // El aviso de version nueva se muestra tambien antes de entrar: si alguien
+  // deja la demo abierta en el login, igual tiene que poder actualizarla.
+  const avisoDeVersion = actualizacion.hay ? (
+    <div
+      role="status"
+      className="fixed left-0 right-0 z-50 flex justify-center px-4 no-imprimir"
+      style={{ bottom: 'calc(72px + env(safe-area-inset-bottom, 0px))' }}
+    >
+      <div className="panel shadow-panel flex items-center gap-3 px-4 py-2">
+        <span className="text-dato">Hay una versión nueva</span>
+        <button type="button" className="boton boton-primario" onClick={actualizacion.actualizar}>
+          Actualizar
+        </button>
+      </div>
+    </div>
+  ) : null
+
+  if (!usuario)
+    return (
+      <>
+        <Login entrar={entrar} />
+        {avisoDeVersion}
+      </>
+    )
 
   const alRegistrar = (id: string, r: ResultadoGestion, nota?: string) => {
     registrar(id, r, nota)
@@ -236,6 +261,8 @@ export default function App() {
           </button>
         )}
       </footer>
+
+      {avisoDeVersion}
 
       {aviso && (
         <Aviso
