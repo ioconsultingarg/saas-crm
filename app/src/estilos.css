@@ -410,6 +410,31 @@ main .grid > * {
   transition: stop-color var(--mov-medio) var(--curva);
 }
 
+/*
+ * Tarjeta del tablero. El levantado al agarrarla se hace con transform y
+ * opacity, que corren en el compositor. Se evaluo Motion para darle fisica
+ * de resorte: costaba 34 kB comprimidos sobre un chunk de 62, en una app
+ * offline-first para Android de gama baja. No lo vale para este gesto.
+ */
+.tarjeta-pipeline {
+  cursor: grab;
+  transition:
+    transform var(--mov-corto) var(--curva),
+    opacity var(--mov-corto) var(--curva),
+    box-shadow var(--mov-corto) var(--curva);
+}
+
+.tarjeta-pipeline:hover {
+  transform: translateY(-1px);
+}
+
+.tarjeta-pipeline[data-agarrada='si'] {
+  cursor: grabbing;
+  opacity: 0.5;
+  transform: scale(1.03);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+}
+
 /* Franjas de seguridad de la app instalada. */
 .inset-arriba {
   padding-top: env(safe-area-inset-top, 0px);

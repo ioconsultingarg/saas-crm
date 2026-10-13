@@ -131,14 +131,12 @@ export function Pipeline({ oportunidades, mover, abrirEmpresa }: Props) {
                             setArrastrando(o.id)
                           }}
                           onDragEnd={() => { setArrastrando(null); setEncima(null) }}
-                          className="rounded p-2 grid gap-1 relative"
+                          className="tarjeta-pipeline rounded p-2 grid gap-1 relative"
+                          data-agarrada={arrastrando === o.id ? 'si' : undefined}
                           style={{
                             background: 'var(--papel)',
                             border: '1px solid var(--pauta)',
                             borderLeft: `3px solid ${COLOR_ETAPA[etapa]}`,
-                            opacity: arrastrando === o.id ? 0.45 : 1,
-                            cursor: 'grab',
-                            transition: 'opacity var(--mov-corto) var(--curva)',
                           }}
                         >
                           <div className="flex items-start gap-1">
