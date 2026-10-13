@@ -80,7 +80,6 @@ export function Dashboard({ oportunidades, clientes, irAPipeline, irACartera, ab
                     height: 30,
                     width: `${Math.max(12, (p.cantidad / maxEmbudo) * 100)}%`,
                     background: COLOR_ETAPA[p.etapa],
-                    transition: 'width var(--mov-medio) var(--curva)',
                   }}
                 >
                   <span

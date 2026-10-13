@@ -145,9 +145,10 @@ export function Configuracion() {
                     width: 20,
                     height: 20,
                     top: 3,
-                    left: i.conectada ? 21 : 3,
+                    left: 3,
                     background: 'var(--superficie)',
-                    transition: 'left var(--mov-corto) var(--curva)',
+                    transform: `translateX(${i.conectada ? 18 : 0}px)`,
+                    transition: 'transform var(--mov-corto) var(--curva)',
                   }}
                 />
               </button>
@@ -190,9 +191,10 @@ export function Configuracion() {
                     width: 20,
                     height: 20,
                     top: 3,
-                    left: r.activa ? 21 : 3,
+                    left: 3,
                     background: 'var(--superficie)',
-                    transition: 'left var(--mov-corto) var(--curva)',
+                    transform: `translateX(${r.activa ? 18 : 0}px)`,
+                    transition: 'transform var(--mov-corto) var(--curva)',
                   }}
                 />
               </button>

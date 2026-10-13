@@ -132,12 +132,19 @@ export function Barra({
         className="flex-1 rounded-sm overflow-hidden"
         style={{ height: 8, background: 'color-mix(in srgb, var(--tinta) 8%, transparent)' }}
       >
+        {/*
+          scaleX en vez de width: animar width obliga al navegador a recalcular
+          el layout en cada cuadro. transform corre en el compositor y no toca
+          el hilo principal, que es lo que se nota en un Android de gama baja.
+        */}
         <div
           style={{
-            width: `${ancho}%`,
+            width: '100%',
             height: '100%',
             background: color,
-            transition: 'width var(--mov-medio) var(--curva)',
+            transformOrigin: 'left center',
+            transform: `scaleX(${ancho / 100})`,
+            transition: 'transform var(--mov-medio) var(--curva)',
           }}
         />
       </div>
