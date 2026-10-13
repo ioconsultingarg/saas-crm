@@ -3,6 +3,7 @@ import { Download } from 'lucide-react'
 import type { ClienteAnalizado, Segmento } from '../tipos'
 import { EtiquetaSegmento } from '../componentes/EtiquetaEstado'
 import { contarSegmentos } from '../lib/calculos'
+import { Vacio } from '../componentes/Vacio'
 import { fecha, num, pesosARS } from '../lib/formato'
 import { CANALES, VENDEDORES, ZONAS } from '../data/seed'
 
@@ -166,6 +167,24 @@ export function Cartera({
         </button>
       </div>
 
+      {filtrados.length === 0 ? (
+        <Vacio
+          titulo="Ningún cliente coincide con el filtro"
+          detalle="Probá quitando el segmento o la zona, o borrando lo que escribiste en el buscador."
+          accion={
+            <button
+              type="button"
+              className="boton boton-secundario"
+              onClick={() => {
+                setBusqueda(''); setCanal(''); setZona(''); setVendedor('')
+                alFiltrar({ segmento: undefined }); setPagina(0)
+              }}
+            >
+              Quitar todos los filtros
+            </button>
+          }
+        />
+      ) : (
       <div className="panel overflow-x-auto">
         <table className="w-full text-dato" style={{ minWidth: 760 }}>
           <caption className="sr-only">Cartera de clientes</caption>
@@ -228,7 +247,9 @@ export function Cartera({
           </tbody>
         </table>
       </div>
+      )}
 
+      {filtrados.length > 0 && (
       <div className="flex items-center justify-between gap-2 mt-3 no-imprimir">
         <p className="text-micro text-tinta-suave">
           Página {pag + 1} de {paginas}
@@ -242,6 +263,7 @@ export function Cartera({
           </button>
         </div>
       </div>
+      )}
     </>
   )
 }

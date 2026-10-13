@@ -9,6 +9,7 @@ import { cuentaDe } from '../data/calle'
 import { resumenRuta } from '../lib/calle'
 import { Barra, Panel } from '../componentes/Piezas'
 import { num, pct, pesosARS } from '../lib/formato'
+import { Vacio } from '../componentes/Vacio'
 
 const TONO: Record<EstadoVisita, { color: string; fondo: string }> = {
   pendiente: { color: 'var(--tinta-suave)', fondo: 'var(--papel)' },
@@ -80,6 +81,15 @@ export function Ruta({ visitas, cola, checkIn, checkOut, sincronizar, abrirComer
           <li><span className="cifra">{num(r.pendientes)}</span> pendientes</li>
         </ul>
       </Panel>
+
+      {visitas.length === 0 && (
+        <Vacio
+          titulo="No tenés visitas asignadas para hoy"
+          detalle="Revisá con administración la ruta del día, o preparalo desde la pantalla anterior."
+          Icono={PackageCheck}
+          buenaNoticia
+        />
+      )}
 
       <ol className="grid gap-2">
         {visitas.map((v) => {

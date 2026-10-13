@@ -5,6 +5,7 @@ import { ARTICULOS, CATEGORIAS, LOTES_POR_VENCER, MARCAS } from '../data/calle'
 import { estadoLote, estadoStock, loteMasProximo } from '../lib/calle'
 import { Kpi, Panel } from '../componentes/Piezas'
 import { num, pesosARS } from '../lib/formato'
+import { Vacio } from '../componentes/Vacio'
 
 const TONOS = {
   critico: { c: 'var(--critico)', f: 'var(--critico-fondo)' },
@@ -135,6 +136,26 @@ export function Stock() {
         </button>
       </div>
 
+      {filtrados.length === 0 ? (
+        <Vacio
+          titulo={soloProblemas ? 'Ningún artículo con problemas' : 'Ningún artículo coincide'}
+          detalle={
+            soloProblemas
+              ? 'Con el filtro actual no hay faltantes ni lotes por vencer. Es una buena noticia.'
+              : 'Probá quitando la categoría o la marca para ver todo el catálogo.'
+          }
+          buenaNoticia={soloProblemas}
+          accion={
+            <button
+              type="button"
+              className="boton boton-secundario"
+              onClick={() => { setCategoria(''); setMarca(''); setSoloProblemas(false) }}
+            >
+              Ver todo el catálogo
+            </button>
+          }
+        />
+      ) : (
       <div className="panel overflow-x-auto">
         <table className="w-full text-dato" style={{ minWidth: 860 }}>
           <caption className="sr-only">Catálogo con stock y lotes</caption>
@@ -184,6 +205,7 @@ export function Stock() {
           </tbody>
         </table>
       </div>
+      )}
     </div>
   )
 }

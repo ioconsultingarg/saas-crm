@@ -4,6 +4,7 @@ import { CUENTAS } from '../data/calle'
 import { EMPRESAS, empresaDe } from '../data/crm'
 import { Barra, Kpi, Panel } from '../componentes/Piezas'
 import { num, pct, pesosARS } from '../lib/formato'
+import { Vacio } from '../componentes/Vacio'
 
 const TONO = {
   rojo: { c: 'var(--critico)', f: 'var(--critico-fondo)', t: 'Bloqueado' },
@@ -83,6 +84,22 @@ export function Cuentas({ abrirEmpresa }: { abrirEmpresa: (id: string) => void }
         </select>
       </div>
 
+      {filtradas.length === 0 ? (
+        <Vacio
+          titulo="Ninguna cuenta coincide"
+          detalle={
+            semaforo === 'rojo'
+              ? 'No hay cuentas bloqueadas con ese criterio. Es una buena noticia.'
+              : 'Probá con otro estado, o borrá lo que escribiste en el buscador.'
+          }
+          buenaNoticia={semaforo === 'rojo'}
+          accion={
+            <button type="button" className="boton boton-secundario" onClick={() => { setQ(''); setSemaforo('') }}>
+              Ver todas las cuentas
+            </button>
+          }
+        />
+      ) : (
       <div className="panel overflow-x-auto">
         <table className="w-full text-dato" style={{ minWidth: 860 }}>
           <caption className="sr-only">Cuentas corrientes</caption>
@@ -132,6 +149,7 @@ export function Cuentas({ abrirEmpresa }: { abrirEmpresa: (id: string) => void }
           </tbody>
         </table>
       </div>
+      )}
     </div>
   )
 }

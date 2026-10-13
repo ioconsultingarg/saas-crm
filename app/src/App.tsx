@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Marco } from './componentes/Marco'
 import { Aviso } from './componentes/Aviso'
+import { LimiteDeError } from './componentes/LimiteDeError'
 import { Login } from './vistas/Login'
 import { Dashboard } from './vistas/Dashboard'
 import { Pipeline } from './vistas/Pipeline'
@@ -213,7 +214,15 @@ export default function App() {
       puedeInstalar={Boolean(instalador)}
       instalar={instalar}
     >
-      {contenido()}
+      {/*
+        El limite envuelve SOLO la vista: si una se rompe, la navegacion, el
+        encabezado y el resto de la app siguen en pie y se puede seguir la
+        demo desde otra pantalla. La key lo reinicia al cambiar de vista, asi
+        no queda pegado mostrando el error de la anterior.
+      */}
+      <LimiteDeError key={ruta.vista} alVolver={() => irA('panel')}>
+        {contenido()}
+      </LimiteDeError>
 
       <footer className="mt-6 pt-4 text-micro text-tinta-suave flex flex-wrap items-center gap-3 no-imprimir" style={{ borderTop: '1px solid var(--pauta)' }}>
         <span>IO-CRM · demo con datos ficticios de Distribuidora Demo S.R.L.</span>

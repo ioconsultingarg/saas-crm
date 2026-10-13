@@ -7,6 +7,7 @@ import { empresaDe } from '../data/crm'
 import { estadoLote, estadoStock, loteMasProximo, sugeridosPara } from '../lib/calle'
 import { num, pesosARS } from '../lib/formato'
 import type { Carrito } from '../hooks/useCalle'
+import { Vacio } from '../componentes/Vacio'
 
 const TONOS = {
   critico: { c: 'var(--critico)', f: 'var(--critico-fondo)' },
@@ -101,6 +102,26 @@ export function Catalogo({ carrito, agregar, irAlCarrito }: Props) {
           Ofertas
         </button>
       </div>
+
+      {filtrados.length === 0 && (
+        <Vacio
+          titulo="Ningún artículo coincide"
+          detalle={
+            soloOfertas
+              ? 'Con el filtro de ofertas quedan pocos artículos. Probá desactivándolo.'
+              : 'Revisá lo que escribiste, o quitá la categoría y la marca para ver todo el catálogo.'
+          }
+          accion={
+            <button
+              type="button"
+              className="boton boton-secundario"
+              onClick={() => { setQ(''); setCategoria(''); setMarca(''); setSoloOfertas(false) }}
+            >
+              Ver todo el catálogo
+            </button>
+          }
+        />
+      )}
 
       <ul className="grid gap-2 tablet:grid-cols-2 escritorio:grid-cols-3">
         {filtrados.map((a) => {
